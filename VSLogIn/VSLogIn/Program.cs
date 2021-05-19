@@ -26,13 +26,18 @@ namespace VSLogIn
             Console.Title = "[VS] Log In Bypass";
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[VS] Bypass routine has been started!");
-            while(true)
+            while (true)
             {
-                foreach(Process p in Process.GetProcessesByName("ServiceHub.IdentityHost"))
+                try
                 {
-                    TerminateProcessFromPID(p.Id);
-                }
-                Thread.Sleep(150);
+                    Console.SetWindowPosition(0, 0);
+                    Console.SetWindowSize(37, 1);
+                    foreach (Process p in Process.GetProcessesByName("ServiceHub.IdentityHost"))
+                    {
+                        TerminateProcessFromPID(p.Id);
+                    }
+                    Thread.Sleep(150);
+                } catch { }
             }
         }
 
