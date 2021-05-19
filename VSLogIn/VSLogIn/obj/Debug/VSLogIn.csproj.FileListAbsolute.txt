@@ -1,0 +1,7 @@
+C:\Users\furka\source\repos\VSLogIn\VSLogIn\bin\Debug\VSLogIn.exe.config
+C:\Users\furka\source\repos\VSLogIn\VSLogIn\bin\Debug\VSLogIn.exe
+C:\Users\furka\source\repos\VSLogIn\VSLogIn\bin\Debug\VSLogIn.pdb
+C:\Users\furka\source\repos\VSLogIn\VSLogIn\obj\Debug\VSLogIn.csprojAssemblyReference.cache
+C:\Users\furka\source\repos\VSLogIn\VSLogIn\obj\Debug\VSLogIn.csproj.CoreCompileInputs.cache
+C:\Users\furka\source\repos\VSLogIn\VSLogIn\obj\Debug\VSLogIn.exe
+C:\Users\furka\source\repos\VSLogIn\VSLogIn\obj\Debug\VSLogIn.pdb
