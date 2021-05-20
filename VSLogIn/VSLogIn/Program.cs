@@ -31,15 +31,16 @@ namespace VSLogIn
                         Console.WriteLine("[VS] Identifier bypassed!");
                         identifier.WaitForExit();
                         Resume(identifier);
+                        TerminateProcess(identifier);
                     }
                     Thread.Sleep(150);
                 } catch { }
             }
         }
 
-        public static bool TerminateProcessFromPID(int pId) // https://slaner.tistory.com/26
+        public static bool TerminateProcess(Process proces) // https://slaner.tistory.com/26
         {
-            IntPtr hProcess = NativeMethods.OpenProcess((int)Enums.ThreadAccess.TERMINATE, false, pId);
+            IntPtr hProcess = NativeMethods.OpenProcess((int)Enums.ThreadAccess.TERMINATE, false, proces.Id);
             Boolean result = false;
             if (hProcess == IntPtr.Zero)
             {
