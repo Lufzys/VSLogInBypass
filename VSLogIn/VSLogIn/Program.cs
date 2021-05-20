@@ -11,15 +11,6 @@ namespace VSLogIn
 {
     class Program
     {
-        [DllImport("kernel32")]
-        public static extern Int32 TerminateProcess(IntPtr hProcess, Int32 ExitCode);
-
-        [DllImport("kernel32")]
-        public static extern void CloseHandle(IntPtr hProcess);
-
-        [DllImport("kernel32")]
-        public static extern IntPtr OpenProcess(Int32 Access, Boolean InheritHandle, Int32 ProcessId);
-        public const Int32 PROCESS_TERMINATE = 0x1;
 
         static void Main(string[] args)
         {
@@ -32,9 +23,14 @@ namespace VSLogIn
                 {
                     Console.SetWindowPosition(0, 0);
                     Console.SetWindowSize(37, 1);
-                    foreach (Process p in Process.GetProcessesByName("ServiceHub.IdentityHost"))
+                    Process[] p = Process.GetProcessesByName("ServiceHub.IdentityHost");
+                    if(p.Length != 0)
                     {
-                        TerminateProcessFromPID(p.Id);
+                        Process identifier = p.FirstOrDefault();
+                        Suspend(identifier);
+                        Console.WriteLine("[VS] Identifier bypassed!");
+                        identifier.WaitForExit();
+                        Resume(identifier);
                     }
                     Thread.Sleep(150);
                 } catch { }
@@ -43,14 +39,14 @@ namespace VSLogIn
 
         public static bool TerminateProcessFromPID(int pId) // https://slaner.tistory.com/26
         {
-            IntPtr hProcess = OpenProcess(PROCESS_TERMINATE, false, pId);
+            IntPtr hProcess = NativeMethods.OpenProcess((int)Enums.ThreadAccess.TERMINATE, false, pId);
             Boolean result = false;
             if (hProcess == IntPtr.Zero)
             {
                 result = false;
             }
 
-            if (TerminateProcess(hProcess, 0) != 0)
+            if (NativeMethods.TerminateProcess(hProcess, 0) != 0)
             {
                 result = true;
             }
@@ -59,8 +55,33 @@ namespace VSLogIn
                 result =  false;
             }
 
-            CloseHandle(hProcess);
+            NativeMethods.CloseHandle(hProcess);
             return result;
+        }
+
+        public static void Suspend(Process process)
+        {
+            foreach (ProcessThread thread in process.Threads)
+            {
+                var pOpenThread = NativeMethods.OpenThread(Enums.ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
+                if (pOpenThread == IntPtr.Zero)
+                {
+                    break;
+                }
+                NativeMethods.SuspendThread(pOpenThread);
+            }
+        }
+        public static void Resume(Process process)
+        {
+            foreach (ProcessThread thread in process.Threads)
+            {
+                var pOpenThread = NativeMethods.OpenThread(Enums.ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
+                if (pOpenThread == IntPtr.Zero)
+                {
+                    break;
+                }
+                NativeMethods.ResumeThread(pOpenThread);
+            }
         }
     }
 }
